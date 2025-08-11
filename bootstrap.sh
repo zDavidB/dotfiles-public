@@ -28,6 +28,17 @@ echo -e "\033[1;35m""Dotfiles Installation Script 🧰
 - Into \033[4;35m${DOTFILES_DIR}\033[0;35m
 Be sure you've read and understood the what will be applied.\033[0m\n"
 
+# Ask user if they'd like to proceed
+if [[ ! $* == *"--auto-yes"* ]] ; then
+  echo -e "${PURPLE}Are you happy to continue? (y/N)${RESET}"
+  read -t 15 -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "${YELLOW}Proceeding was rejected by user, exiting...${RESET}"
+    exit 0
+  fi
+fi
+
 # If dependencies not met, install them
 if ! hash git 2> /dev/null; then
   bash <(curl -s  -L 'https://gist.github.com/zDavidB/d7a1d9ae0c0833f0912ce38537e24807')
