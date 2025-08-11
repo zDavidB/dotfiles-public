@@ -1,0 +1,45 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+
+- clean: ["~"]
+
+
+- shell:
+    - [chsh -s $(which zsh), Making zsh the default shell]
+
+- link:
+    # Essential configs (ZSH, Vim, Tmux)
+    ~/.zshenv: { path: config/zsh/zshenv, force: true }
+    ~/.bashrc: config/bash/bashrc
+    ~/.zshrc: config/zsh/zshrc
+    ~/.zlogin: config/zsh/zlogin
+    ~/.p10k.zsh: config/zsh/p10k.zsh
+    ~/.config/shell/aws_aliases: config/shell/aws_aliases
+    ~/.config/shell/git_aliases: config/shell/git_aliases
+    ~/.config/shell/zsh_aliases: config/shell/zsh_aliases
+    ~/.config/shell/zsh_userids: config/shell/zsh_userids
+    ~/.config/shell/zsh_exports: config/shell/zsh_exports
+    ~/.config/shell/zsh_functions: config/shell/zsh_functions
+
+    # Misc app configs
+    ~/.vimrc: config/vim/vimrc
+    ~/.direnvrc: config/shell/direnvrc
+
+    # Git config files
+    ~/.config/git/config: config/git/config
+    ~/.config/git/config_work: config/git/config_work
+    ~/.config/git/ignore: config/git/ignore
+    ~/.config/git/gitmessage.txt: config/git/gitmessage.txt
+
+
+# If not already present, create home directories
+- create:
+    - ~/Downloads
+    - ~/Documents
+    - ~/Applications
+    - ~/tmp
+    - ~/workspace
+    - ~/.ssh:
+        mode: 0700

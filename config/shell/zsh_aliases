@@ -1,0 +1,176 @@
+# Akamai docker images
+alias akadev='docker run --rm -it --name akamai -v ${HOME}/.edgerc:/root/.edgerc:ro -v ${HOME}/workspace/_akadev:/root/workspace -v ${HOME}/.config/akadev/.profile:/root/.profile -v ${HOME}/.config/akadev/.aliases:/root/.aliases akamai/shell'
+alias akspoof="sudo ${HOME}/.config/hosts/akspoof.sh"
+alias translate="akamai diagnostics translate-error-string"
+
+alias bashrc="${EDITOR:-nano} +120 ~/.bashrc && source ~/.bashrc && echo Bash config edited and reloaded."
+
+# Buku bookmark aliases
+alias bk='buku --suggest'
+alias bks='bk --np -s '
+
+# Homebrew aliases
+alias brupd="brew update && brew outdated"
+alias brupg="brew upgrade"
+
+alias code='codium'
+alias vcode='/opt/homebrew/bin/code'
+
+# Clear the screen of your clutter
+alias c="clear"
+alias cls="clear;ls;pwd"
+
+alias cp="cp -vi"
+
+alias c.='vcode .'
+
+# Getting outa directories
+alias ch='cd ~'
+alias cl='cd -'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias ..2='cd ../../'
+alias ..3='cd ../../../'
+
+alias cg='cd $(git rev-parse --show-toplevel)' # Base of git project
+
+
+# curl for useragents
+alias ie6curl="curl -H \"User-Agent: Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)\""
+alias ffcurl="curl -H \"User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.8) Gecko/2009032609 Firefox/3.0.0 (.NET CLR 3.5.30729)\""
+alias getheaders="curl -I -s -H \"Pragma: akamai-x-get-extracted-values\" "
+alias headers='curl -H "Pragma: akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-extracted-values, akamai-x-get-nonces, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-serial-no, akamai-x-get-request-id, akamai-x-get-client-ip akamai-x-feo-trace, akamai-x-get-extracted-values" -IXGET'
+alias hdrcurl='curl -i -v -s -o /dev/null'
+
+#Docker aliases
+alias dockerclean='if [[ $(docker images -f "dangling=true" -q | wc -l) -gt 0 ]]; then docker rmi $(docker images -f "dangling=true" -q); fi'
+#alias aws='docker run --rm -it -v ~/.aws:/root/.aws -v $(pwd):/aws amazon/aws-cli'
+
+alias diff='/opt/homebrew/bin/diff --color=auto'
+alias dw="diceware"
+
+alias d="du -sh"
+alias du='du -kh'    # Makes a more readable output.
+alias df='df -kTh'
+
+alias flushdns="sudo killall -HUP mDNSResponder;sleep 2;"
+
+# GREP Motifications
+alias grep="grep --color=auto"
+alias grepp="grep -P --color=auto"
+
+alias guidu="uuid | sed -e 's/-//g'"
+alias guidl="guidu | tr '[:upper:]' '[:lower:]'"
+alias guid="guidl"
+
+alias hostsv="cat /etc/hosts"
+alias hostsed="sudo vi /etc/hosts"
+alias h='history'
+
+# external IP address
+alias ipe='curl ipinfo.io/ip'
+# local IP address
+alias ipi='ipconfig getifaddr en0'
+
+alias jop="joplin --profile ~/.config/joplin-desktop"
+
+# Json tools (pipe unformatted to these to nicely format the JSON)
+alias json="python -m json.tool"
+alias jsonf="python -m json.tool"
+
+alias kpxc="keepassxc-cli"
+
+alias lower="tr '[:upper:]' '[:lower:]'"
+
+# Prints disk usage in human readable form
+alias l="eza -lahF"
+alias ls="eza -lahF"
+alias lt="eza -lahF --tree"
+#alias ls='ls -GFh'
+alias ll="eza -aghHli --git --icons --group-directories-first"
+alias la="eza -aghHli --git --icons --group-directories-first --sort=name"
+alias ltr="eza -aghHli --git --icons --group-directories-first --sort=modified -r"
+
+
+# https://github.com/jesseduffield/lazydocker/blob/master/README.md
+alias lzd='lazydocker'
+
+# -> Prevents accidentally clobbering files.
+alias mkdir='mkdir -p'
+
+# Make some of the file manipulation programs verbose
+alias mv="mv -vi"
+alias rm="rm -vi"
+
+alias n.="nova ."
+alias n="nova"
+alias nwinfo="networksetup -listallhardwareports"
+
+
+alias pwdcopy="pwd | pbcopy"
+
+# python
+alias envcreate='python3 -m venv .venv'
+alias mkenv='python3 -m venv .venv'
+alias envstart='source .venv/bin/activate'
+alias sourceenv='source .venv/bin/activate'
+alias envclose='deactivate'
+
+alias servethis="python -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'"
+alias pypath='python -c "import sys; print sys.path" | tr "," "\n" | grep -v "egg"'
+alias pycclean='find . -name "*.pyc" -exec rm {} \; && find . -name "__pycache__" -exec rm -rf {} \;'
+
+# Pretty-print of some PATH variables:
+alias path='echo -e ${PATH//:/\\n}'
+alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+
+alias pass='gopass'
+alias getpass="openssl rand -base64 20"
+alias passcp="openssl rand -base64 20 | pbcopy"
+alias pw='pwgen -s1 15 1'
+alias pw2='pwgen -s1 15 2'
+alias pw4='pwgen -s1 15 4'
+alias pwc='pw | pbcopy'
+
+
+# Edit shortcuts for config files
+alias sshconfig="${EDITOR:-nano} ~/.ssh/config"
+
+# SSH helper
+alias sshclear="rm ~/.ssh/multiplex/* -f && echo SSH connection cache cleared;"
+alias sshlist="echo Currently open ssh connections && echo && l ~/.ssh/multiplex/"
+alias keyprint="ssh-keygen -E md5 -lf"
+
+
+#Terraform aliases
+alias tg="terragrunt"
+alias tgi="terragrunt init -upgrade"
+alias tgp="terragrunt plan"
+alias tga="terragrunt apply"
+alias tf="terraform"
+alias tfmt="tf fmt"
+alias terrafrom="terraform"
+
+alias unixtime="${HOME}/bin/unixtime/unixtime.sh"
+alias upper="tr '[:lower:]' '[:upper:]'"
+alias untar='tar -zxvf '
+alias uuid='uuidgen'
+
+alias viewreadme='markdown README.md | lynx -stdin'
+
+alias vi='nvim'
+
+alias weather="ansiweather -l London,GB"
+alias wttr="curl -s 'wttr.in/{London, GB}?mT'"
+alias wget='wget -c '
+alias which='type -a'
+alias wi="whois"
+alias www='python -m SimpleHTTPServer 8000'
+
+# Key locations
+alias workspace='cd ${HOME}/workspace/'
+alias tmp='cd ${HOME}/tmp/'
+alias logs='cd ${HOME}/logs/'
+
+alias zshrc="${EDITOR:-nano} +120 ~/.zshrc && source ~/.zshrc && echo zsh config edited and reloaded."

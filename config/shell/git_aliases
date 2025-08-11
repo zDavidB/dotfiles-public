@@ -1,0 +1,111 @@
+# Also see https://kapeli.com/cheat_sheets/Oh-My-Zsh_Git.docset/Contents/Resources/Documents/index
+
+alias g='git'
+
+alias gst='g status'
+
+alias gfe='g fetch'
+
+alias gco='g checkout'
+alias gcwc='gco develop'
+
+alias gsw='g switch'
+alias gswc='g switch -c'
+alias gswm='g switch main'
+
+alias gcm='gco main'
+
+alias groot='cd $(git rev-parse --show-toplevel)'
+alias glast='g log -1 HEAD'
+
+alias ggpush='g push origin $(current_branch)'
+alias ggpushf='ggpush --force-with-lease'
+alias ggpusht='g push origin --tags'
+
+alias gc='g commit'
+alias gc!='gc --amend'
+alias gca='gc -a'
+alias gca!='gca --amend'
+alias gcmsg='g commit -m '
+
+alias gpull='g pull'
+alias grebase='gl --rebase'
+alias gpullff='gl --ff-only'
+
+alias gm='g merge'
+alias gmff='gm --ff-only'
+alias gmnff='gm --no-ff'
+
+alias ga='g add'
+alias gap='ga --patch'
+alias gai='ga -i'
+
+alias gb='g branch'
+alias gba='g branch -a'
+
+alias ggr='git grep'
+
+alias gpr='git pull --rebase'
+alias gup='git pull --rebase'
+
+alias grb='g rebase'
+alias grbi='grb --interactive'
+alias grbiod='grbi origin/develop'
+alias grbiom='grbi origin/master'
+alias grbc='grb --continue'
+alias grba='grb --abort'
+
+# Open the current local repo remote via browser
+function gro() {
+  git remote get-url origin \
+  | awk -F "@" '{print $2}' \
+  | awk -F " " '{print $1}' \
+  | sed 's/:/\//g' \
+  | sed 's/.git//g' \
+  | awk '{print "https://"$1}' \
+  | xargs open
+}
+
+alias gt='g tag'
+# Get the latest tag across all branchs
+alias glt='git describe --tags $(git rev-list --tags --max-count=1)'
+
+alias gre='g reset'
+alias greh='gre --hard'
+alias ggrh='greh origin/$(current_branch)'
+
+alias gd='g diff'
+alias gdo='gd origin/$(current_branch) $(current_branch)'
+
+alias gcp='g cherry-pick'
+alias gcpa='gcp --abort'
+alias gcpc='gcp --continue'
+
+alias gsts='git stash show --text'
+alias gsta='g stash'
+alias gstp='gsta pop'
+alias gstd='gsta drop'
+
+alias gcl='g clone'
+
+alias gr='g remote'
+
+
+# Open current branch
+alias ghob='gho tree/$(git symbolic-ref --quiet --short HEAD )'
+
+# Open current directory/file in current branch
+alias ghobf="gho tree/$(git symbolic-ref --quiet --short HEAD )/$(git rev-parse --show-prefix)"
+
+# Open current directory/file in main branch
+alias ghof='gho tree/main/$(git rev-parse --show-prefix)'
+
+
+# https://github.com/robbyrussell/oh-my-zsh
+function current_branch() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}
+
+alias pcr='pre-commit run'

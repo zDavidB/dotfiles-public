@@ -1,0 +1,310 @@
+command_exists () {
+  hash "$1" 2> /dev/null
+}
+
+# make a dir and cd into it
+mcd () {
+    mkdir -p "$@" && cd "$@"
+}
+
+# Make directory, and cd into it
+mkcd() {
+  local dir="$*";
+  mkdir -p "$dir" && cd "$dir";
+}
+
+# Make dir and copy
+mkcp() {
+  local dir="$2"
+  local tmp="$2"; tmp="${tmp: -1}"
+  [ "$tmp" != "/" ] && dir="$(dirname "$2")"
+  [ -d "$dir" ] ||
+    mkdir -p "$dir" &&
+    cp -r "$@"
+}
+
+# Move dir and move into it
+mkmv() {
+  local dir="$2"
+  local tmp="$2"; tmp="${tmp: -1}"
+  [ "$tmp" != "/" ] && dir="$(dirname "$2")"
+  [ -d "$dir" ] ||
+      mkdir -p "$dir" &&
+      mv "$@"
+}
+
+
+function rm_terraform {
+    find . \( -iname ".terraform*" ! -iname ".terraform-docs*" \) -print0 | xargs -0 rm -r
+}
+
+
+function psgrep(){
+    f=${1:0:1} ;
+    e=${1:1} ;
+    ps auxww | grep "[$f]$e" ;
+}
+
+function cos {
+    (cd $HOME/workspace/color-searcher && python3 script.py "$1")
+}
+
+jdk() {
+        version=$1
+        export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
+        java -version
+ }
+
+function httpless {
+    # `httpless example.org'
+    https --pretty=all --print=hb "$@" | less -R;
+}
+
+
+prips() {
+  local cidr="$1" ; local lo hi a b c d e f g h
+
+  # range is bounded by network (-n) & broadcast (-b) addresses.
+  lo=$(ipcalc -n "$cidr" | cut -f2 -d=)
+  hi=$(ipcalc -b "$cidr" | cut -f2 -d=)
+
+  IFS=. read -r a b c d <<< "$lo"
+  IFS=. read -r e f g h <<< "$hi"
+
+  eval "echo {$a..$e}.{$b..$f}.{$c..$g}.{$d..$h}"
+}
+
+function mkpkg()
+{
+    local foldername=$1
+    local pkgfilename="__init__.py"
+
+    mkdir -p ./${foldername} && touch ./${foldername}/${pkgfilename}
+
+    echo "Package ${foldername} created"
+
+}
+
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo 1
+    else
+        echo 0
+    fi
+
+}
+
+function decode() {
+  encoded_data=$1
+
+  echo ${encoded_data} | w3m -dump -T text/html
+
+}
+
+randval() {
+    jot -r "$(wc -l ~/.shell_functions)" 1 |
+    head -n 10
+}
+
+encrypt() {
+
+    FILENAME=${1}
+    BACKUP_PASSWORD=${2}
+    ITERATIONS=500000
+    MESSAGEDIGEST=sha512
+
+    openssl enc -e -aes-256-cbc -md ${MESSAGEDIGEST} -pbkdf2 -iter ${ITERATIONS} -salt -in ${FILENAME} -base64 -out ${FILENAME}.enc -pass pass:${BACKUP_PASSWORD}
+    if [ $? -eq 0 ]
+    then
+        echo "Successfully encrypted file as ${FILENAME}.enc"
+    else
+        echo "Error encrypting file ${FILENAME}: $?"
+    fi
+
+}
+
+decrypt() {
+
+	#set -x
+    FILENAME=${1}
+    BACKUP_PASSWORD=${2}
+    ITERATIONS=500000
+    MESSAGEDIGEST=sha512
+
+    openssl enc -d -aes-256-cbc -md ${MESSAGEDIGEST} -pbkdf2 -iter ${ITERATIONS} -salt -base64 -in ${FILENAME} -out ${FILENAME%.enc} -pass pass:${BACKUP_PASSWORD}
+    if [ $? -eq 0 ]
+    then
+        echo "Successfully decrypted file ${FILENAME} to ${FILENAME%.enc}"
+    else
+        echo "Error decrypting file ${FILENAME}: $?"
+    fi
+
+}
+
+gencrypt() {
+    filename=${1}
+    _recipient=${2}
+
+    result=$(gpg --output ${filename}.enc --encrypt --recipient ${_recipient} ${filename})
+    if [ $? -eq 0 ]
+    then
+        echo "Successfully encrypted file"
+        rm -f ${filename}
+    else
+        echo "Error encrypting file ${filename}: ${result}"
+    fi
+}
+
+gdecrypt() {
+    filename=${1}
+    filename_decrypted=${filename%.enc}
+
+    result=$(gpg --output ${filename_decrypted} --decrypt ${filename})
+    if [ $? -eq 0 ]
+    then
+        echo "Successfully decrypted file"
+
+    else
+        echo "Error decrypting file ${filename}: ${result}"
+    fi
+}
+
+fingerprint() { ssh-keygen -lf $1 -E md5 }
+
+function unsetaws()
+{
+    unset AWS_DEFAULT_PROFILE && unset AWS_PROFILE && unset AWS_ACCESS_KEY_ID && unset AWS_SECRET_ACCESS_KEY
+}
+
+function gpw()
+{
+  openssl rand -base64 48 | cut -c1-${1}
+
+}
+
+killit() {
+    # Kills any process that matches a regexp passed to it
+    ps aux | grep -v "grep" | grep "$@" | awk '{print $2}' | xargs sudo kill
+}
+
+
+function dnsflush()
+{
+    sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
+}
+
+
+function myip()
+{
+    #extIp=$(dig +short myip.opendns.com)
+    extIp=$(curl -s checkip.amazonaws.com)
+    extIp2=$(curl -s v4.ifconfig.co)
+
+    printf "Wireless IP: "
+    MY_IP=$(/sbin/ifconfig en0 | awk '/inet / { print $2 } ' |
+
+    sed -e s/addr://)
+    echo ${MY_IP:-"Not connected"}
+
+    printf "Wired IP: "
+
+    MY_IP=$(/sbin/ifconfig en1 | awk '/inet / { print $2 } ' |
+
+    sed -e s/addr://)
+
+    echo ${MY_IP:-"Not connected"}
+
+    echo "+++++++++++++++++++++++++++++++++++++++"
+
+    echo "WAN IP: $extIp"
+    echo "EXT IP: $extIp2"
+
+}
+
+viewmd () {
+    # view markdown file in a TUI browser
+    pandoc $1 | lynx -stdin
+}
+
+
+function showttl() {
+   DOMAIN=$1
+   dig +trace +nocmd +noall +answer +ttlid cname ${DOMAIN} | grep -i "CNAME"
+}
+
+function gi() {
+  # Get a gitignore template for a given platform
+  curl -L -s https://www.gitignore.io/api/$@ ;
+}
+
+
+# Super useful Docker container oneshots.
+# Usage: dockrun, or dockrun [centos7|fedora27|debian9|debian8|ubuntu1404|etc.]
+dockrun() {
+  docker run -it geerlingguy/docker-"${1:-ubuntu1604}"-ansible /bin/bash
+}
+
+# Enter a running Docker container.
+function denter() {
+  if [[ ! "$1" ]] ; then
+      echo "You must supply a container ID or name."
+      return 0
+  fi
+
+  docker exec -it $1 bash
+  return 0
+}
+
+# Delete a given line number in the known_hosts file.
+del_ssh_host() {
+  re='^[0-9]+$'
+  if ! [[ $1 =~ $re ]] ; then
+    echo "error: line number missing" >&2;
+  else
+    sed -i '' "$1d" ~/.ssh/known_hosts
+  fi
+}
+
+function yaml_validate {
+  python -c 'import sys, yaml, json; yaml.safe_load(sys.stdin.read())'
+}
+
+function yaml2json {
+  python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read())))'
+}
+
+function yaml2json_pretty {
+  python -c 'import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin.read()), indent=2, sort_keys=False))'
+}
+
+function json_validate {
+  python -c 'import sys, yaml, json; json.loads(sys.stdin.read())'
+}
+
+function json2yaml {
+  python -c 'import sys, yaml, json; print(yaml.dump(json.loads(sys.stdin.read())))'
+}
+
+# git repository greeter
+last_repository=
+check_directory_for_new_repository() {
+ current_repository=$(git rev-parse --show-toplevel 2> /dev/null)
+
+ if [ "$current_repository" ] && \
+    [ "$current_repository" != "$last_repository" ]; then
+  onefetch
+ fi
+ last_repository=$current_repository
+}
+cd() {
+ builtin cd "$@"
+ check_directory_for_new_repository
+}
+
+# optional, greet also when opening shell directly in repository directory
+# adds time to startup
+check_directory_for_new_repository

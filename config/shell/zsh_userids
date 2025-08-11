@@ -1,0 +1,6 @@
+# User ids to export
+export EMAIL_ADDRESS={{e-mail}}
+export GITHUB_USER={{github-userid}}
+export SSH_USER={{ssh-user-name}}
+
+export GITHUB_USERNAME=${GITHUB_USER}

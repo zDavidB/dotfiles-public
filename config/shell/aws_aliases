@@ -1,0 +1,14 @@
+
+alias awsprofiles='aws configure list-profiles'
+
+# needs the AWS profiles setting up
+alias logintriage='azlogin akamai-eng-triage'
+alias logintest='azlogin akamai-eng-non-prod'
+alias loginprod='azlogin akamai-eng-prod'
+
+azlogin() {
+	unset AWS_PROFILE
+    profile=$1
+    aws-azure-login --profile ${profile}
+    export AWS_PROFILE=${profile}
+}
