@@ -1,0 +1,9 @@
+documentation:
+- 'docs/**'
+- '**/*.md'
+- '*.md'
+repo-config:
+- '*'
+- '.*'
+release-config: .releaserc.yml
+github-config: .github/**
