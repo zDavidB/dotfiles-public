@@ -26,4 +26,4 @@ jobs:
             @semantic-release/exec
             @semantic-release/git
         env:
-          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
