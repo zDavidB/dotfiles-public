@@ -8,6 +8,9 @@
     }
   ],
   "plugins": [
+    "@semantic-release/changelog",
+    "@semantic-release/exec",
+    "@semantic-release/git",
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/github"
